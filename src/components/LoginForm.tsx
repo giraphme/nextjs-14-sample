@@ -1,7 +1,9 @@
 "use client";
 
 import { css } from "@/styled-system/css";
-import { PropsWithChildren } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PropsWithChildren, forwardRef } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const loginFormSchema = z.object({
@@ -16,6 +18,10 @@ export function LoginForm({
 }: {
   onSubmit: (data: LoginFormSchema) => Promise<void>;
 }) {
+  const { register } = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormSchema),
+  });
+
   return (
     <form
       className={css({
@@ -38,11 +44,15 @@ export function LoginForm({
       </h1>
 
       <FormField label="メールアドレス">
-        <Input type="email" placeholder="sample@example.com" />
+        <Input
+          type="email"
+          placeholder="sample@example.com"
+          {...register("email")}
+        />
       </FormField>
 
       <FormField label="パスワード">
-        <Input type="password" />
+        <Input type="password" {...register("password")} />
       </FormField>
 
       <div
@@ -70,37 +80,43 @@ function FormField({
   );
 }
 
-function Input(props: React.ComponentProps<"input">) {
-  return (
-    <input
-      className={css({
-        display: "block",
-        mt: "2",
-        w: "100%",
-        px: "6",
-        py: "3",
-        rounded: "md",
-      })}
-      {...props}
-    />
-  );
-}
+const Input = forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  function Input(props, ref) {
+    return (
+      <input
+        className={css({
+          display: "block",
+          mt: "2",
+          w: "100%",
+          px: "6",
+          py: "3",
+          rounded: "md",
+        })}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
 
-function Button(props: React.ComponentProps<"button">) {
-  return (
-    <button
-      className={css({
-        color: "white",
-        bg: "blue.500",
-        fontWeight: "bolder",
-        px: "4",
-        py: "2",
-        rounded: "lg",
-        fontSize: "lg",
-      })}
-      {...props}
-    >
-      ログイン
-    </button>
-  );
-}
+const Button = forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
+  function Button(props, ref) {
+    return (
+      <button
+        className={css({
+          color: "white",
+          bg: "blue.500",
+          fontWeight: "bolder",
+          px: "4",
+          py: "2",
+          rounded: "lg",
+          fontSize: "lg",
+        })}
+        ref={ref}
+        {...props}
+      >
+        ログイン
+      </button>
+    );
+  }
+);
