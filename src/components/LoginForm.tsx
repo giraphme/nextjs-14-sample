@@ -1,10 +1,20 @@
+"use client";
+
 import { css } from "@/styled-system/css";
-import { ComponentProps, PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
+import { z } from "zod";
+
+export const loginFormSchema = z.object({
+  email: z.string().email().min(1),
+  password: z.string().min(6).max(200).regex(/[ -~]/),
+});
+
+export type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 export function LoginForm({
-  formProps,
+  onSubmit,
 }: {
-  formProps: ComponentProps<"form">;
+  onSubmit: (data: LoginFormSchema) => Promise<void>;
 }) {
   return (
     <form
@@ -16,7 +26,6 @@ export function LoginForm({
         p: 10,
         rounded: "lg",
       })}
-      {...formProps}
     >
       <h1
         className={css({
@@ -29,7 +38,7 @@ export function LoginForm({
       </h1>
 
       <FormField label="メールアドレス">
-        <Input type="text" placeholder="sample@example.com" />
+        <Input type="email" placeholder="sample@example.com" />
       </FormField>
 
       <FormField label="パスワード">
