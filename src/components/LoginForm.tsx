@@ -18,7 +18,10 @@ export function LoginForm({
 }: {
   onSubmit: (data: LoginFormSchema) => Promise<void>;
 }) {
-  const { register } = useForm<LoginFormSchema>({
+  const { register, handleSubmit } = useForm<LoginFormSchema>({
+    defaultValues: {
+      email: "dummy@example.com",
+    },
     resolver: zodResolver(loginFormSchema),
   });
 
@@ -32,6 +35,7 @@ export function LoginForm({
         p: 10,
         rounded: "lg",
       })}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <h1
         className={css({
