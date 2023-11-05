@@ -1,21 +1,20 @@
 "use client";
 
+import { useCallback } from "react";
 import { LoginForm, LoginFormSchema } from "@/components/LoginForm";
+import { toast } from "react-toastify";
+
 import { submit } from "./actions";
-import { useCallback, useState } from "react";
 
 export default function WithJsxSingleFile() {
-  const [message, setMessage] = useState<JSX.Element | null>(null);
-
   const submitWithFeedback = useCallback(async (data: LoginFormSchema) => {
-    const result = await submit(data);
-    setMessage(result);
+    const message = await submit(data);
+    toast.success(message);
   }, []);
 
   return (
     <main>
       <LoginForm onSubmit={submitWithFeedback} />
-      {message}
     </main>
   );
 }
